@@ -22,7 +22,7 @@ func requestHandlerOn(resp http.ResponseWriter, req *http.Request) {
 	if err != nil {
 		log.Fatalln(err)
 	}
-	// Hi Angiiii
+
 	defer resp2.Body.Close()
 
 	body, err := ioutil.ReadAll(resp2.Body)
