@@ -7,7 +7,7 @@ RUN apk add curl && curl -L ${QEMU_URL} | tar zxvf - -C . --strip-components 1
 
 # Initialize a new build stage, rename it and set Golang as base image for subsequent instructions
 #FROM golang:latest AS buildStageCompiling
-FROM arm64v8/golang:latest
+FROM arm64v8/golang:1.14.1-alpine AS buildStageCompiling
 # Add QEMU
 COPY --from=qemu qemu-aarch64-static /usr/bin
 
