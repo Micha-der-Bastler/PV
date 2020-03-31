@@ -13,7 +13,7 @@ func main() {
 	http.HandleFunc("/off", requestHandlerOff)
 
 	// Acceptance of HTTP-Requests
-	http.ListenAndServe(":8080", nil)
+	http.ListenAndServe(":80", nil)
 }
 
 // Request-Handler
