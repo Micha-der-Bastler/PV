@@ -16,6 +16,8 @@ COPY . .
 
 # Disable cgo to avoid error "standard_init_linux.go:211: exec user process caused "no such file or directory""
 ENV CGO_ENABLED=0
+ENV GOARCH=arm
+ENV GOARM=7
 RUN go env GOARCH
 RUN go env GOARM
 

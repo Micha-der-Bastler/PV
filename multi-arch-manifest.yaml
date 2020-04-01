@@ -4,12 +4,12 @@ manifests:
     platform:
       architecture: amd64
       os: linux
-  - image: michaderbastler/pv:latest-linux-arm64v8-woq
+  - image: michaderbastler/pv:latest-linux-arm64v8-ocq
     platform:
       architecture: arm64
       os: linux
       variant: v8
-  - image: michaderbastler/pv:latest-linux-arm32v7-woq
+  - image: michaderbastler/pv:latest-linux-arm32v7-ocq
     platform:
       architecture: arm
       os: linux
