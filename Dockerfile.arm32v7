@@ -1,14 +1,14 @@
 FROM alpine AS qemu
 
 #QEMU Download
-ENV QEMU_URL https://github.com/balena-io/qemu/releases/download/v3.0.0%2Bresin/qemu-3.0.0+resin-aarch64.tar.gz
+ENV QEMU_URL https://github.com/balena-io/qemu/releases/download/v3.0.0%2Bresin/qemu-3.0.0+resin-arm.tar.gz
 RUN apk add curl && curl -L ${QEMU_URL} | tar zxvf - -C . --strip-components 1
 
 
 # Initialize a new build stage, rename it and set Golang as base image for subsequent instructions
-FROM arm64v8/golang:1.14.1-alpine AS buildStageCompiling
+FROM arm32v7/golang:1.13.9-alpine AS buildStageCompiling
 # Add QEMU
-COPY --from=qemu qemu-aarch64-static /usr/bin
+COPY --from=qemu qemu-arm-static /usr/bin
 
 # Copy source files from host's context into the container's (new created) workspace
 WORKDIR /go/src/pv
@@ -18,9 +18,9 @@ COPY . .
 ENV CGO_ENABLED=0
 
 # Downloat all imported packages and compile the program
-RUN ["/usr/bin/qemu-aarch64-static", "/usr/local/go/bin/go", "get", "-d", "-v", "./..."]
+RUN ["/usr/bin/qemu-arm-static", "/usr/local/go/bin/go", "get", "-d", "-v", "./..."]
 #RUN go get -d -v ./...
-RUN ["/usr/bin/qemu-aarch64-static", "/usr/local/go/bin/go", "build", "-a"]
+RUN ["/usr/bin/qemu-arm-static", "/usr/local/go/bin/go", "build", "-a"]
 #RUN go build -a
 
 # Copy the executable into an empty image and execute it with container start
