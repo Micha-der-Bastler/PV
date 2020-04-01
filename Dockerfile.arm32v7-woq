@@ -16,12 +16,14 @@ COPY . .
 
 # Disable cgo to avoid error "standard_init_linux.go:211: exec user process caused "no such file or directory""
 ENV CGO_ENABLED=0
+RUN go env GOARCH
+RUN go env GOARM
 
 # Download all imported packages and compile the program
 #RUN ["/usr/bin/qemu-arm-static", "/usr/local/go/bin/go", "get", "-d", "-v", "./..."]
 RUN go get -d -v ./...
 #RUN ["/usr/bin/qemu-arm-static", "/usr/local/go/bin/go", "build", "-a"]
-RUN go build -a
+RUN go build -ldflags "-linkmode external -extldflags -static" -a
 
 # Copy the executable into an empty image and execute it with container start
 FROM scratch AS buildStageRuntime
