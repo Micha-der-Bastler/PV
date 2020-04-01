@@ -1,0 +1,16 @@
+image: michaderbastler/pv:latest
+manifests:
+  - image: michaderbastler/pv:latest-linux-amd64
+    platform:
+      architecture: amd64
+      os: linux
+  - image: michaderbastler/pv:latest-linux-arm64v8-woq
+    platform:
+      architecture: arm64
+      os: linux
+      variant: v8
+  - image: michaderbastler/pv:latest-linux-arm32v7-woq
+    platform:
+      architecture: arm
+      os: linux
+      variant: v7
