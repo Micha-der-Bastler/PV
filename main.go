@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"io/ioutil"
 	"log"
 	"net/http"
@@ -11,6 +12,7 @@ func main() {
 	// Router (links all HTTP-Requests with special url pattern to a special Request-Handler)
 	http.HandleFunc("/on", requestHandlerOn)
 	http.HandleFunc("/off", requestHandlerOff)
+	http.HandleFunc("/version", requestHandlerVersion)
 
 	// Acceptance of HTTP-Requests
 	http.ListenAndServe(":80", nil)
@@ -48,4 +50,7 @@ func requestHandlerOff(resp http.ResponseWriter, req *http.Request) {
 
 	//log.Println(string(body))
 	resp.Write([]byte(body))
+}
+func requestHandlerVersion(resp http.ResponseWriter, req *http.Request) {
+	fmt.Fprintf(resp, "02.04.2020 02:30")
 }

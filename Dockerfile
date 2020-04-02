@@ -8,7 +8,7 @@ COPY . .
 # Disable cgo to avoid error "standard_init_linux.go:211: exec user process caused "no such file or directory""
 ENV CGO_ENABLED=0
 
-# Downloat all imported packages and compile the program
+# Download all imported packages and compile the program
 RUN go get -d -v ./...
 RUN go build -a
 
