@@ -9,17 +9,17 @@ spec:
   selector:
     app: pv
   ports:
-    - protocol: TCP
-      nodePort: 30000
-      port: 80
-      targetPort: 80
+  - protocol: TCP
+    nodePort: 30000
+    port: 80
+    targetPort: 80
 ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: pv-deployment
 spec:
-  replicas: 4
+  replicas: 3
   selector:
     matchLabels:
       app: pv
@@ -29,7 +29,7 @@ spec:
         app: pv
     spec:
       containers:
-        - image: michaderbastler/pv:latest
-          name: pv-container
-          ports:
-            - containerPort: 80
+      - image: michaderbastler/pv:latest
+        name: pv-container
+        ports:
+        - containerPort: 80
