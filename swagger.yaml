@@ -1,0 +1,100 @@
+swagger: "2.0"
+
+info:
+  version: 1.0.0
+  title: PV API
+  description: This API mainly provides the actual power as well as the power history of two photovoltaic systems.
+
+schemes:
+  - http
+host: michaglauner.de
+basePath: /pv
+
+tags:
+  - name: "Power"
+    description: "Actual power of the pv system"
+  - name: "Power history"
+    description: "Power history of the pv system"
+  - name: "Version"
+    description: "Version of the pv system"
+
+paths:
+  /power/{owner}:
+    get:
+      tags:
+        - "Power"
+      summary: Get the actual power of the owner's pv system.
+      description: Returns the actual power of the owner's pv system.
+      parameters:
+        - $ref: '#/parameters/owner'
+      responses:
+        200:
+          description: Actual power in watt.
+          schema:
+            $ref: '#/definitions/power'
+        404:
+          $ref: '#/responses/404NotFound'
+  /powerHistory/{owner}:
+    get:
+      tags:
+        - "Power history"
+      summary: Get the power history of the owner's pv system.
+      description: Returns the power history of the owner's pv system as list of power and timestamp pairs.
+      parameters:
+        - $ref: '#/parameters/owner'
+        - $ref: '#/parameters/from'
+        - $ref: '#/parameters/to'
+      responses:
+        200:
+          description: A list of power and timestamp pairs. Power unit is watt. Time format is "ISO8601 date-time".
+          schema:
+            $ref: '#/definitions/powerHistory'
+        404:
+          $ref: '#/responses/404NotFound'
+  /version:
+    get:
+      tags:
+        - "Version"
+      summary: Get the version of the pv system.
+      description: Returns the actual software version of the pv system.
+      responses:
+        200:
+          description: Actual software version of the pv system.
+          schema:
+            type: string
+
+definitions:
+  powerHistory:
+    type: array
+    items:
+      properties:
+        power:
+          type: integer
+        timestamp:
+          type: string
+          format: date-time
+  power:
+    type: integer
+
+parameters:
+  owner:
+    name: owner
+    in: path
+    required: true
+    description: The owner of the photovoltaic system. Allowed values are "micha" or "dieter".
+    type: string
+  from:
+    name: from
+    in: query
+    description: Start timestamp of the power history. Time format is "ISO8601 date-time".
+    type: string
+    format: date-time
+  to:
+    name: to
+    in: query
+    description: End timestamp of the power history. Time format is "ISO8601 date-time".
+    type: string
+    format: date-time
+responses:
+  404NotFound:
+    description: The owner does not exist.
