@@ -29,7 +29,7 @@ spec:
         app: pv
     spec:
       containers:
-      - image: michaderbastler/pv:latest
+      - image: michaderbastler/pv:latest-linux-arm32v7
         name: pv-container
         ports:
         - containerPort: 80
