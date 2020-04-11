@@ -52,5 +52,5 @@ func requestHandlerOff(resp http.ResponseWriter, req *http.Request) {
 	resp.Write([]byte(body))
 }
 func requestHandlerVersion(resp http.ResponseWriter, req *http.Request) {
-	fmt.Fprintf(resp, "02.04.2020 02:30")
+	fmt.Fprintf(resp, "11.04.2020 20:34")
 }
