@@ -20,7 +20,7 @@ func main() {
 
 // Request-Handler
 func requestHandlerOn(resp http.ResponseWriter, req *http.Request) {
-	resp2, err := http.Get("http://shelly1-76f2fa/relay/0?turn=on")
+	resp2, err := http.Get("http://shelly1pm-BA0F5F/relay/0?turn=on")
 	if err != nil {
 		log.Fatalln(err)
 	}
@@ -36,7 +36,7 @@ func requestHandlerOn(resp http.ResponseWriter, req *http.Request) {
 	resp.Write([]byte(body))
 }
 func requestHandlerOff(resp http.ResponseWriter, req *http.Request) {
-	resp2, err := http.Get("http://shelly1-76f2fa/relay/0?turn=off")
+	resp2, err := http.Get("http://shelly1pm-BA0F5F/relay/0?turn=off")
 	if err != nil {
 		log.Fatalln(err)
 	}
