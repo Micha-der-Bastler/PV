@@ -1,13 +1,18 @@
 package main
 
 import (
+	"PV/power/powerRepository/powerRepositoryRest"
 	"fmt"
+	"github.com/sirupsen/logrus"
 	"io/ioutil"
 	"log"
 	"net/http"
 )
 
 func main() {
+
+	pRR := powerRepositoryRest.NewPowerRepositoryRest()
+	logrus.Info(pRR.GetPower("http://shelly1pm-BA0F5F"))
 
 	// Router (links all HTTP-Requests with special url pattern to a special Request-Handler)
 	http.HandleFunc("/on", requestHandlerOn)
