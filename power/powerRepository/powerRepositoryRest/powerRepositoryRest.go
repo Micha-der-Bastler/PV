@@ -8,22 +8,23 @@ import (
 	"net/http"
 )
 
+// powerRepositoryRest represents the  REST repository layer of the power domain.
 type powerRepositoryRest struct {
 }
 
-// NewPowerRepositoryRest creates an object that fulfilles the domain.PowerRepositorySensor interface
-func NewPowerRepositoryRest() domain.PowerRepositorySensor {
+// NewPowerRepositoryRest returns a pointer to an object that fulfills the domain.PowerRepositoryRest interface.
+func NewPowerRepositoryRest() domain.PowerRepositoryRest {
 	return &powerRepositoryRest{}
 }
 
 // GetPower requests the endpoint "/status" of the Shelly device with the given base URL and
-// returns tho power of meter[0] of its response.
-func (r *powerRepositoryRest) GetPower(baseURL string) (domain.Power, error) {
+// returns the power of its meter[0].
+func (r *powerRepositoryRest) GetPower(baseUrl string) (domain.Power, error) {
 	// Object to store the JSON value in
 	var status shelly.Status
 
 	// Send HTTP GET request
-	resp, err := http.Get(baseURL + "/status")
+	resp, err := http.Get(baseUrl + "/status")
 	if err != nil {
 		logrus.Error("Error getting response from Shelly. ", err)
 		return 0, err

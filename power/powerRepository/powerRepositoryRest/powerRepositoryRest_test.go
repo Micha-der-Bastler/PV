@@ -69,10 +69,10 @@ func Test_GetPower_NegValues(t *testing.T) {
 	// Close the server when test finishes
 	defer server.Close()
 	// Create test object
-	pRR := powerRepositoryRest.NewPowerRepositoryRest()
+	powRepoRest := powerRepositoryRest.NewPowerRepositoryRest()
 
 	// Act
-	res, err := pRR.GetPower(server.URL)
+	res, err := powRepoRest.GetPower(server.URL)
 
 	// Assert 2/2
 	assert.Equal(t, domain.Power(-4.55), res)
