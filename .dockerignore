@@ -1,3 +1,0 @@
-# Exclude all files except "main.go" from dockers context
-*
-!main.go

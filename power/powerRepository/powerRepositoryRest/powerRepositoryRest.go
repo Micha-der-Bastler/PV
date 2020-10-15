@@ -1,9 +1,9 @@
 package powerRepositoryRest
 
 import (
-	"PV/domain"
-	"PV/models/shelly"
 	"encoding/json"
+	"github.com/Micha-der-Bastler/pv/domain"
+	"github.com/Micha-der-Bastler/pv/models/shelly"
 	"github.com/sirupsen/logrus"
 	"net/http"
 )

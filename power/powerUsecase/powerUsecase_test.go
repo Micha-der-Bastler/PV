@@ -1,9 +1,9 @@
 package powerUsecase_test
 
 import (
-	"PV/domain"
-	"PV/domain/mocks"
-	"PV/power/powerUsecase"
+	"github.com/Micha-der-Bastler/pv/domain"
+	"github.com/Micha-der-Bastler/pv/domain/mocks"
+	"github.com/Micha-der-Bastler/pv/power/powerUsecase"
 	"github.com/stretchr/testify/assert"
 	"testing"
 )

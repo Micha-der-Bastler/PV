@@ -1,8 +1,8 @@
 package powerRepositoryRest_test
 
 import (
-	"PV/domain"
-	"PV/power/powerRepository/powerRepositoryRest"
+	"github.com/Micha-der-Bastler/pv/domain"
+	"github.com/Micha-der-Bastler/pv/power/powerRepository/powerRepositoryRest"
 	"github.com/stretchr/testify/assert"
 	"net/http"
 	"net/http/httptest"

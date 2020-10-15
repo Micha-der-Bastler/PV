@@ -1,9 +1,9 @@
 package main
 
 import (
-	"PV/power/powerDelivery/powerDeliveryRest"
-	"PV/power/powerRepository/powerRepositoryRest"
-	"PV/power/powerUsecase"
+	"github.com/Micha-der-Bastler/pv/power/powerDelivery/powerDeliveryRest"
+	"github.com/Micha-der-Bastler/pv/power/powerRepository/powerRepositoryRest"
+	"github.com/Micha-der-Bastler/pv/power/powerUsecase"
 	"github.com/labstack/echo"
 )
 

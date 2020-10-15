@@ -1,6 +1,6 @@
 package shelly
 
-import "PV/domain"
+import "github.com/Micha-der-Bastler/pv/domain"
 
 type Meter struct {
 	Power domain.Power
