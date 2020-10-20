@@ -1,9 +1,9 @@
 package powerDeliveryRest_test
 
 import (
-	"github.com/Micha-der-Bastler/pv/domain/mocks"
-	"github.com/Micha-der-Bastler/pv/power/powerDelivery/powerDeliveryRest"
 	"github.com/labstack/echo"
+	"github.com/michaderbastler/pv/domain/mocks"
+	"github.com/michaderbastler/pv/power/powerDelivery/powerDeliveryRest"
 	"github.com/stretchr/testify/assert"
 	"net/http"
 	"net/http/httptest"

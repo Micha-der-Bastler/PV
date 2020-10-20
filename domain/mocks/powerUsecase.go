@@ -1,6 +1,6 @@
 package mocks
 
-import "github.com/Micha-der-Bastler/pv/domain"
+import "github.com/michaderbastler/pv/domain"
 
 type powerUsecase struct {
 }

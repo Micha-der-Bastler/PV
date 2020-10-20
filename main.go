@@ -1,10 +1,10 @@
 package main
 
 import (
-	"github.com/Micha-der-Bastler/pv/power/powerDelivery/powerDeliveryRest"
-	"github.com/Micha-der-Bastler/pv/power/powerRepository/powerRepositoryRest"
-	"github.com/Micha-der-Bastler/pv/power/powerUsecase"
 	"github.com/labstack/echo"
+	"github.com/michaderbastler/pv/power/powerDelivery/powerDeliveryRest"
+	"github.com/michaderbastler/pv/power/powerRepository/powerRepositoryRest"
+	"github.com/michaderbastler/pv/power/powerUsecase"
 )
 
 func main() {

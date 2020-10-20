@@ -2,7 +2,7 @@
 FROM golang:latest AS buildStageCompiling
 
 # Copy source files from host's context into the container's (new created) workspace
-WORKDIR /go/src/github.com/Micha-der-Bastler/pv
+WORKDIR /go/src/github.com/michaderbastler/pv
 COPY . .
 
 # Disable cgo to avoid error "standard_init_linux.go:211: exec user process caused "no such file or directory""
@@ -14,6 +14,6 @@ RUN go build -a
 
 # Copy the executable into an empty image and execute it with container start
 FROM scratch AS buildStageRuntime
-COPY --from=buildStageCompiling /go/src/github.com/Micha-der-Bastler/pv/pv /
+COPY --from=buildStageCompiling /go/src/github.com/michaderbastler/pv/pv /
 EXPOSE 80/tcp
 ENTRYPOINT ["/pv"]

@@ -1,6 +1,6 @@
 package powerUsecase
 
-import "github.com/Micha-der-Bastler/pv/domain"
+import "github.com/michaderbastler/pv/domain"
 
 // powerUsecase represents the usecase layer of the power domain.
 type powerUsecase struct {

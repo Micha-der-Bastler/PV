@@ -1,7 +1,7 @@
 package mocks
 
 import (
-	"github.com/Micha-der-Bastler/pv/domain"
+	"github.com/michaderbastler/pv/domain"
 )
 
 type powerRepositoryRest struct {

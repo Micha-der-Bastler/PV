@@ -1,8 +1,8 @@
 package powerDeliveryRest
 
 import (
-	"github.com/Micha-der-Bastler/pv/domain"
 	"github.com/labstack/echo"
+	"github.com/michaderbastler/pv/domain"
 	"net/http"
 )
 
