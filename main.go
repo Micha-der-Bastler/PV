@@ -8,7 +8,6 @@ import (
 )
 
 func main() {
-	// No change to be able to commit
 	e := echo.New()
 
 	powRepoRest := powerRepositoryRest.NewPowerRepositoryRest()
