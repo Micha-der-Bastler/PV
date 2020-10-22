@@ -14,9 +14,12 @@ stages:
           # Copy files from a source folder to a target folder using patterns matching file paths
           - task: CopyFiles@2
             inputs:
-              SourceFolder: '$(System.DefaultWorkingDirectory)'  # Local path on the agent where your source code files are downloaded. For example: c:\agent_work\1\s
+              SourceFolder: '$(System.DefaultWorkingDirectory)'  # Local path on the agent where the git repository gets checked out. For example: /home/vsts/work/1/s
               Contents: '**'  # copy all files in the specified source folder and all files in all sub-folders
               TargetFolder: '$(System.DefaultWorkingDirectory)/src/$(projectName)'
-          - script: |
-              cd $(System.DefaultWorkingDirectory)/src/$(projectName)
-              ls -al
+          - script: cp -r $(System.DefaultWorkingDirectory) $(System.DefaultWorkingDirectory)/src/1
+            displayName: copy non verbose
+          - script: cp -r -v $(System.DefaultWorkingDirectory) $(System.DefaultWorkingDirectory)/src/2
+            displayName: copy verbose
+          - script: mv -v $(System.DefaultWorkingDirectory) $(System.DefaultWorkingDirectory)/src/3
+            displayName: move verbose
