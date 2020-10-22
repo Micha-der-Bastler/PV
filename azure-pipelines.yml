@@ -1,29 +1,22 @@
-# Docker
-# Build a Docker image 
-# https://docs.microsoft.com/azure/devops/pipelines/languages/docker
-
-trigger:
-- master
-
-resources:
-- repo: self
-
 variables:
-  tag: '$(Build.BuildId)'
+  projectName: pv
 
 stages:
-- stage: Build
-  displayName: Build image
-  jobs:  
-  - job: Build
-    displayName: Build
-    pool:
-      vmImage: 'ubuntu-latest'
-    steps:
-    - task: Docker@2
-      displayName: Build an image
-      inputs:
-        command: build
-        dockerfile: '$(Build.SourcesDirectory)/Dockerfile'
-        tags: |
-          $(tag)
+  - stage: Test
+    jobs:
+      - job: Test
+        pool:
+          vmImage: 'ubuntu-18.04'
+        steps:
+          - script: echo $(System.DefaultWorkingDirectory)
+          - script: echo $(projectName)
+            displayName: print project
+          # Copy files from a source folder to a target folder using patterns matching file paths
+          - task: CopyFiles@2
+              inputs:
+                SourceFolder: '$(System.DefaultWorkingDirectory)'  # Local path on the agent where your source code files are downloaded. For example: c:\agent_work\1\s
+                Contents: '**'  # copy all files in the specified source folder and all files in all sub-folders
+                TargetFolder: '$(System.DefaultWorkingDirectory)/src/$(projectName)'
+          - script: |
+              cd $(System.DefaultWorkingDirectory)/src/$(projectName)
+              ls -al
