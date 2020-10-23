@@ -1,15 +1,17 @@
 variables:
-  projectName: pv
-  modulePath: '$(GOPATH)/src/github.com/$(build.repository.name)' # Path to the module's code
+  # projectName: pv
+  modulePath: '$(GOPATH)/src/github.com/$(Build.Repository.Name)' # "Build.Repository.Name" is the name of the
+  # triggering repository (e.g. "michaderbastler/pv").
+
+pool:
+  vmImage: 'ubuntu-18.04'
 
 stages:
   - stage: Test
-    displayName: Test source code
+    displayName: Run Tests
     jobs:
       - job: Test
-        displayName: Test source code
-        pool:
-          vmImage: 'ubuntu-18.04'
+        displayName: Run Tests
         steps:
           - task: GoTool@0
             displayName: 'Install Go and set GOPATH'
@@ -31,17 +33,15 @@ stages:
               echo $GOROOT
               echo print HOME:
               echo $HOME
-              echo Build.Repository.Name
+              echo print Build.Repository.Name
               echo $(Build.Repository.Name)
-              echo build.repository.name
-              echo $(build.repository.name)
               echo modulePath
               echo $(modulePath)
             displayName: print info
           - task: CopyFiles@2
-            displayName: 'Copy repo into GOPATH'
+            displayName: 'Copy git repo into GOPATH'
             inputs:
-              SourceFolder: '$(System.DefaultWorkingDirectory)'  # Local path on the agent where the git repository
-              # gets checked out. For example: /home/vsts/work/1/s
-              Contents: '**'  # Copy all files in the specified source folder and all files in all sub-folders
-              TargetFolder: '$(GOPATH)/src/$(projectName)'
+              SourceFolder: '$(System.DefaultWorkingDirectory)'  # "System.DefaultWorkingDirectory" is the local path
+              # on the agent where the git repository gets checked out (e.g. "/home/vsts/work/1/s").
+              Contents: '**'  # Copy all files of the specified source folder and its sub-folders
+              TargetFolder: '$(modulePath)'
