@@ -55,5 +55,5 @@ stages:
             displayName: 'Execute tests'
             inputs:
               command: 'test'
-              arguments: '-v'
+              arguments: '-v ./...'
               workingDirectory: '$(modulePath)'
