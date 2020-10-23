@@ -27,7 +27,7 @@ stages:
             displayName: 'Install Go'
             inputs:
               version: '1.15.3'
-              goPath: '$HOME/go'
+              goPath: '$(HOME)/go'
           - script: |
               echo go version:
               go version
