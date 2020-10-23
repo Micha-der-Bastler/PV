@@ -46,10 +46,10 @@ stages:
               Contents: '**'  # Copy all files of the specified source folder and its sub-folders
               TargetFolder: '$(modulePath)'
           - task: Go@0
-            displayName: 'Get packages'
+            displayName: 'Get required packages'
             inputs:
               command: 'get'
-              arguments: '-d -v ./...'
+              arguments: '-d -t -v ./...'
               workingDirectory: '$(modulePath)'
           - task: Go@0
             displayName: 'Execute tests'
