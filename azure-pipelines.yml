@@ -2,9 +2,11 @@ variables:
   projectName: pv
 
 stages:
-  - stage: Test source code
+  - stage: Test
+    displayName: Test source code
     jobs:
-      - job: Execute Tests of source code
+      - job: Test
+        displayName: Test source code
         pool:
           vmImage: 'ubuntu-18.04'
         steps:
