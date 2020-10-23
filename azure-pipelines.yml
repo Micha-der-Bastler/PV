@@ -1,5 +1,6 @@
 variables:
   projectName: pv
+  modulePath: '$(GOPATH)/src/github.com/$(build.repository.name)' # Path to the module's code
 
 stages:
   - stage: Test
@@ -10,25 +11,18 @@ stages:
         pool:
           vmImage: 'ubuntu-18.04'
         steps:
-          - script: echo $(System.DefaultWorkingDirectory)
-          - script: echo $(projectName)
-            displayName: print project
-          - script: |
-              echo go version:
-              go version
-              echo print GOPATH:
-              echo $GOPATH
-              echo print GOROOT:
-              echo $GOROOT
-              echo print HOME:
-              echo $HOME
-            displayName: print go info before
           - task: GoTool@0
-            displayName: 'Install Go'
+            displayName: 'Install Go and set GOPATH'
             inputs:
               version: '1.15.3'
               goPath: '$(HOME)/go'
           - script: |
+              echo projectName
+              echo $(projectName)
+              echo projectName ohne Klammer
+              echo $projectName
+              echo System.DefaultWorkingDirectory
+              echo $(System.DefaultWorkingDirectory)
               echo go version:
               go version
               echo print GOPATH:
@@ -37,10 +31,17 @@ stages:
               echo $GOROOT
               echo print HOME:
               echo $HOME
-            displayName: print go info after
-          # Copy source code from checked out repo to GOPATH
+              echo Build.Repository.Name
+              echo $(Build.Repository.Name)
+              echo build.repository.name
+              echo $(build.repository.name)
+              echo modulePath
+              echo $(modulePath)
+            displayName: print info
           - task: CopyFiles@2
+            displayName: 'Copy repo into GOPATH'
             inputs:
-              SourceFolder: '$(System.DefaultWorkingDirectory)'  # Local path on the agent where the git repository gets checked out. For example: /home/vsts/work/1/s
+              SourceFolder: '$(System.DefaultWorkingDirectory)'  # Local path on the agent where the git repository
+              # gets checked out. For example: /home/vsts/work/1/s
               Contents: '**'  # Copy all files in the specified source folder and all files in all sub-folders
               TargetFolder: '$(GOPATH)/src/$(projectName)'
