@@ -13,12 +13,6 @@ stages:
           - script: echo $(System.DefaultWorkingDirectory)
           - script: echo $(projectName)
             displayName: print project
-          # Copy source code from checked out repo to GOPATH
-          - task: CopyFiles@2
-            inputs:
-              SourceFolder: '$(System.DefaultWorkingDirectory)'  # Local path on the agent where the git repository gets checked out. For example: /home/vsts/work/1/s
-              Contents: '**'  # Copy all files in the specified source folder and all files in all sub-folders
-              TargetFolder: '$(System.DefaultWorkingDirectory)/src/$(projectName)'
           - script: |
               echo go version:
               go version
@@ -33,7 +27,7 @@ stages:
             displayName: 'Install Go'
             inputs:
               version: '1.15.3'
-              goPath: '$(System.DefaultWorkingDirectory)/go'
+              goPath: '$HOME/go'
           - script: |
               echo go version:
               go version
@@ -44,3 +38,9 @@ stages:
               echo print HOME:
               echo $HOME
             displayName: print go info after
+          # Copy source code from checked out repo to GOPATH
+          - task: CopyFiles@2
+            inputs:
+              SourceFolder: '$(System.DefaultWorkingDirectory)'  # Local path on the agent where the git repository gets checked out. For example: /home/vsts/work/1/s
+              Contents: '**'  # Copy all files in the specified source folder and all files in all sub-folders
+              TargetFolder: '$(GOPATH)/src/$(projectName)'
