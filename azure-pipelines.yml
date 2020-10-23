@@ -32,8 +32,9 @@ stages:
           - script: echo $GOROOT
             displayName: print GOROOT
           - task: GoTool@0
+            displayName: set go
             inputs:
-              version: '1.15.3'
+              version: '1.15.2'
           - script: |
               echo go version:
               go version
