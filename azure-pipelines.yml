@@ -26,15 +26,14 @@ stages:
               echo $GOPATH
               echo print GOROOT:
               echo $GOROOT
+              echo print HOME:
+              echo $HOME
             displayName: print go info before
-          - script: echo $GOPATH
-            displayName: print GOPATH
-          - script: echo $GOROOT
-            displayName: print GOROOT
           - task: GoTool@0
-            displayName: set go
+            displayName: 'Install Go'
             inputs:
-              version: '1.15.2'
+              version: '1.15.3'
+              goPath: '$(System.DefaultWorkingDirectory)/go'
           - script: |
               echo go version:
               go version
@@ -42,4 +41,6 @@ stages:
               echo $GOPATH
               echo print GOROOT:
               echo $GOROOT
+              echo print HOME:
+              echo $HOME
             displayName: print go info after
