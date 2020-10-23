@@ -45,3 +45,9 @@ stages:
               # on the agent where the git repository gets checked out (e.g. "/home/vsts/work/1/s").
               Contents: '**'  # Copy all files of the specified source folder and its sub-folders
               TargetFolder: '$(modulePath)'
+          - task: Go@0
+            displayName: 'Install packages and its dependencies'
+            inputs:
+              command: 'get'
+              arguments: '-d -v ./...'
+              workingDirectory: '$(modulePath)'
