@@ -2,24 +2,24 @@ variables:
   projectName: pv
 
 stages:
-  - stage: Test
+  - stage: Test source code
     jobs:
-      - job: Test
+      - job: Execute Tests of source code
         pool:
           vmImage: 'ubuntu-18.04'
         steps:
           - script: echo $(System.DefaultWorkingDirectory)
           - script: echo $(projectName)
             displayName: print project
-          # Copy files from a source folder to a target folder using patterns matching file paths
+          # Copy source code from checked out repo to GOPATH
           - task: CopyFiles@2
             inputs:
               SourceFolder: '$(System.DefaultWorkingDirectory)'  # Local path on the agent where the git repository gets checked out. For example: /home/vsts/work/1/s
-              Contents: '**'  # copy all files in the specified source folder and all files in all sub-folders
+              Contents: '**'  # Copy all files in the specified source folder and all files in all sub-folders
               TargetFolder: '$(System.DefaultWorkingDirectory)/src/$(projectName)'
-          - script: cp -r $(System.DefaultWorkingDirectory) $(System.DefaultWorkingDirectory)/src/1
-            displayName: copy non verbose
-          - script: cp -r -v $(System.DefaultWorkingDirectory) $(System.DefaultWorkingDirectory)/src/2
-            displayName: copy verbose
-          - script: mv -v $(System.DefaultWorkingDirectory) $(System.DefaultWorkingDirectory)/src/3
-            displayName: move verbose
+          - script: go version
+            displayName: print go version
+          - script: echo $(GOPATH)
+            displayName: print GOPATH
+          - script: echo $(GOROOT)
+            displayName: print GOROOT
