@@ -1,3 +1,12 @@
+trigger:
+  branches:
+    include:
+      - '*'
+  paths:
+    exclude:
+      - README.md
+      - .gitignore
+
 variables:
   # projectName: pv
   modulePath: '$(GOPATH)/src/github.com/$(Build.Repository.Name)' # "Build.Repository.Name" is the name of the
