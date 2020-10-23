@@ -3,7 +3,7 @@
 
 ## Styleguide
 Abbreviation at
-- variabte
+- variables
 - Function parameter
 - Field declaration
 - Method receivers
