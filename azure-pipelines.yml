@@ -19,9 +19,26 @@ stages:
               SourceFolder: '$(System.DefaultWorkingDirectory)'  # Local path on the agent where the git repository gets checked out. For example: /home/vsts/work/1/s
               Contents: '**'  # Copy all files in the specified source folder and all files in all sub-folders
               TargetFolder: '$(System.DefaultWorkingDirectory)/src/$(projectName)'
-          - script: go version
-            displayName: print go version
-          - script: echo $(GOPATH)
+          - script: |
+              echo go version:
+              go version
+              echo print GOPATH:
+              echo $GOPATH
+              echo print GOROOT:
+              echo $GOROOT
+            displayName: print go info before
+          - script: echo $GOPATH
             displayName: print GOPATH
-          - script: echo $(GOROOT)
+          - script: echo $GOROOT
             displayName: print GOROOT
+          - task: GoTool@0
+            inputs:
+              version: '1.15.3'
+          - script: |
+              echo go version:
+              go version
+              echo print GOPATH:
+              echo $GOPATH
+              echo print GOROOT:
+              echo $GOROOT
+            displayName: print go info after
