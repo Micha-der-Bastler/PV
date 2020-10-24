@@ -60,9 +60,25 @@ stages:
               command: 'get'
               arguments: '-d -t -v ./...'
               workingDirectory: '$(modulePath)'
-          - task: Go@0
-            displayName: 'Execute tests'
+          - script: |
+              # Packages to view the test result in Azure Pipelines
+              go get github.com/jstemmer/go-junit-report  # Converts the go test output to a junit xml report
+
+              # Packages to view the test coverage in Azure Pipelines
+              go get github.com/axw/gocov/gocov  # Coverage reporting tool for Go
+              go get github.com/AlekSi/gocov-xml  # Converts the gocov json output into a XML coverage report
+              # TODO ggf latest nehmen, nicht v1
+              go get gopkg.in/matm/v1/gocov-html  # Converts the gocov json output into a HTML coverage report
+
+              go test -v -coverprofile=coverage.txt -covermode count ./... > test_results.txt
+              go-junit-report < test_results.txt > report.xml
+
+              # go test -v -coverprofile=coverage.txt -covermode count ./... 2>&1 | go-junit-report > report.xml
+              # go test ./... -v -coverprofile=coverage.txt -covermode count 2>&1 | $GOPATH/bin/go-junit-report > report.xml Fabian
+            displayName: 'Run Tests'
+          - task: PublishTestResults@2
             inputs:
-              command: 'test'
-              arguments: '-v ./...'
-              workingDirectory: '$(modulePath)'
+              testResultsFormat: 'JUnit'
+              testResultsFiles: 'report.xml' # ggf ein ./ voranstellen
+              searchFolder: '$(modulePath)'
+
