@@ -79,6 +79,6 @@ stages:
           - task: PublishTestResults@2
             inputs:
               testResultsFormat: 'JUnit'
-              testResultsFiles: 'report.xml' # ggf ein ./ voranstellen
+              testResultsFiles: './report.xml' # ggf ein ./ voranstellen
               searchFolder: '$(modulePath)'
 
