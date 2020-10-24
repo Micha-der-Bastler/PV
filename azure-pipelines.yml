@@ -74,6 +74,7 @@ stages:
               go test -v -coverprofile=coverage.txt -covermode count ./... > test_results.txt
               pwd
               $GOPATH/bin/go-junit-report < test_results.txt > report.xml
+              ls -al
 
               # go test -v -coverprofile=coverage.txt -covermode count ./... 2>&1 | go-junit-report > report.xml
               # go test ./... -v -coverprofile=coverage.txt -covermode count 2>&1 | $GOPATH/bin/go-junit-report > report.xml Fabian
@@ -85,5 +86,5 @@ stages:
             inputs:
               testResultsFormat: 'JUnit'
               testResultsFiles: '**/report.xml' # ggf ein ./ voranstellen
-              searchFolder: '$(modulePath)'
+              searchFolder: '$(System.DefaultWorkingDirectory)'
 
