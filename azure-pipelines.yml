@@ -70,12 +70,17 @@ stages:
               # TODO ggf latest nehmen, nicht v1
               go get gopkg.in/matm/v1/gocov-html  # Converts the gocov json output into a HTML coverage report
 
+              pwd
               go test -v -coverprofile=coverage.txt -covermode count ./... > test_results.txt
+              pwd
               $GOPATH/bin/go-junit-report < test_results.txt > report.xml
 
               # go test -v -coverprofile=coverage.txt -covermode count ./... 2>&1 | go-junit-report > report.xml
               # go test ./... -v -coverprofile=coverage.txt -covermode count 2>&1 | $GOPATH/bin/go-junit-report > report.xml Fabian
             displayName: 'Run Tests'
+          - script: |
+              cd $(modulePath)
+              ls -al
           - task: PublishTestResults@2
             inputs:
               testResultsFormat: 'JUnit'
