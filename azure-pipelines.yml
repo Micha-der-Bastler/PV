@@ -63,7 +63,7 @@ stages:
               pwd
               echo ls -al
               ls -al
-              mkdir $(modulePath)
+              mkdir -p $(modulePath)
               find ./ -mindepth 1 -maxdepth 1 -exec mv {} $(modulePath) \;
               echo pwd
               pwd
