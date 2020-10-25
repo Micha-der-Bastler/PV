@@ -82,7 +82,7 @@ stages:
               arguments: '-d -t -v ./...'
               workingDirectory: '$(modulePath)'
           - script: |
-
+              cd $(modulePath)
 
               ### TODO go test wird in altem Verzeichnis /home/vsts/work/1/s mit altem Code ausgeführt. Code verschieben anstatt kopieren? Lieber GOPATH nicht im $HOME/go???
 
@@ -94,11 +94,15 @@ stages:
               go get github.com/axw/gocov/gocov  # Coverage reporting tool for Go
               go get github.com/AlekSi/gocov-xml  # Converts the gocov json output into a XML coverage report
 
-
               ### TODO ggf latest nehmen, nicht v1
 
 
               go get gopkg.in/matm/v1/gocov-html  # Converts the gocov json output into a HTML coverage report
+
+              cd ..
+              cd ..
+              ls -al
+              cd $(modulePath)
 
               pwd
               go test -v -coverprofile=coverage.txt -covermode count ./... > test_results.txt
@@ -115,6 +119,6 @@ stages:
           - task: PublishTestResults@2
             inputs:
               testResultsFormat: 'JUnit'
-              testResultsFiles: '**/report.xml' # ggf ein ./ voranstellen
-              searchFolder: '$(System.DefaultWorkingDirectory)'
+              testResultsFiles: 'report.xml' # ggf ein ./ voranstellen
+              searchFolder: '$(modulePath)'
 
