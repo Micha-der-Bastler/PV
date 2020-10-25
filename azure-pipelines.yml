@@ -46,14 +46,35 @@ stages:
               echo $(Build.Repository.Name)
               echo modulePath
               echo $(modulePath)
+              echo pwd
+              pwd
+              echo ls -al
+              ls -al
             displayName: print info
-          - task: CopyFiles@2
-            displayName: 'Copy git repo into GOPATH'
-            inputs:
-              SourceFolder: '$(System.DefaultWorkingDirectory)'  # "System.DefaultWorkingDirectory" is the local path
-              # on the agent where the git repository gets checked out (e.g. "/home/vsts/work/1/s").
-              Contents: '**'  # Copy all files of the specified source folder and its sub-folders
-              TargetFolder: '$(modulePath)'
+#          - task: CopyFiles@2
+#            displayName: 'Copy git repo into GOPATH'
+#            inputs:
+#              SourceFolder: '$(System.DefaultWorkingDirectory)'  # "System.DefaultWorkingDirectory" is the local path
+#              # on the agent where the git repository gets checked out (e.g. "/home/vsts/work/1/s").
+#              Contents: '**'  # Copy all files of the specified source folder and its sub-folders
+#              TargetFolder: '$(modulePath)'
+          - script: |
+              echo pwd
+              pwd
+              echo ls -al
+              ls -al
+              mkdir $(modulePath)
+              find ./ -mindepth 1 -maxdepth 1 -exec mv {} $(modulePath) \;
+              echo pwd
+              pwd
+              echo ls -al
+              ls -al
+              cd $(modulePath)
+              echo pwd
+              pwd
+              echo ls -al
+              ls -al
+            displayName: move instead copy
           - task: Go@0
             displayName: 'Get required packages'
             inputs:
@@ -61,13 +82,22 @@ stages:
               arguments: '-d -t -v ./...'
               workingDirectory: '$(modulePath)'
           - script: |
+
+
+              ### TODO go test wird in altem Verzeichnis /home/vsts/work/1/s mit altem Code ausgeführt. Code verschieben anstatt kopieren? Lieber GOPATH nicht im $HOME/go???
+
+
               # Packages to view the test result in Azure Pipelines
               go get github.com/jstemmer/go-junit-report  # Converts the go test output to a junit xml report
 
               # Packages to view the test coverage in Azure Pipelines
               go get github.com/axw/gocov/gocov  # Coverage reporting tool for Go
               go get github.com/AlekSi/gocov-xml  # Converts the gocov json output into a XML coverage report
-              # TODO ggf latest nehmen, nicht v1
+
+
+              ### TODO ggf latest nehmen, nicht v1
+
+
               go get gopkg.in/matm/v1/gocov-html  # Converts the gocov json output into a HTML coverage report
 
               pwd
