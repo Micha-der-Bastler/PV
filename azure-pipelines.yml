@@ -8,7 +8,6 @@ trigger:
       - .gitignore
 
 variables:
-  # projectName: pv
   modulePath: '$(GOPATH)/src/github.com/$(Build.Repository.Name)' # "Build.Repository.Name" is the name of the
   # triggering repository (e.g. "michaderbastler/pv").
 
@@ -28,12 +27,16 @@ stages:
               version: '1.15.3'
               goPath: '$(HOME)/go'
           - script: |
-              # $(System.DefaultWorkingDirectory) is the local path on the agent where the git repository gets
+              # "System.DefaultWorkingDirectory" is the local path on the agent where the git repository gets
               # checked out and a new step starts in (e.g. "/home/vsts/work/1/s")
               mkdir -p $(modulePath)    # -p creates also parent directories if necessary
               find ./ -mindepth 1 -maxdepth 1 -exec mv {} $(modulePath) \;    # Find all files, folders and hidden
               # elements only inside the current hierarchy level and move them to $(modulePath)
-            displayName: Move repo into GOPATH
+              cd $(modulePath)
+              echo Repo is located in: $(pwd)
+              echo Files in repo:
+              ls -al
+            displayName: Move repo inside GOPATH
           - task: Go@0
             displayName: 'Get required packages'
             inputs:
