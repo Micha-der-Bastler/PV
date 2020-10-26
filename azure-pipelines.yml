@@ -47,25 +47,25 @@ stages:
               cd $(modulePath)
 
               # Get packages to view the test result in Azure Pipelines
-              go get github.com/jstemmer/go-junit-report  # Converts the go test result output into a junit xml report
+              go get github.com/jstemmer/go-junit-report  # Converts the go test result output into a junit xml format
 
-              # Get packages to view the test coverage in Azure Pipelines
-              go get github.com/axw/gocov/gocov           # Converts the go test coverage output into a json format
-              go get github.com/AlekSi/gocov-xml          # Converts the gocov json output into a xml coverage report
+              # Get packages to view the code coverage in Azure Pipelines
+              go get github.com/axw/gocov/gocov           # Converts the go test code coverage output into a json format
+              go get github.com/AlekSi/gocov-xml          # Converts the gocov json output into a xml format
 
               ### TODO ggf latest nehmen, nicht v1
               go get gopkg.in/matm/v1/gocov-html          # Converts the gocov json output into a html coverage report
 
               # Run tests
-              go test -v -coverprofile=coverage.txt -covermode count ./... | tee test_results.txt   # tee prints
+              go test -v -coverprofile=codeCoverage.txt -covermode count ./... | tee testResults.txt   # tee prints
               # the piped STDOUT of "go test" to the terminal and additionally writes it to a file. STDERR from
               # "go test" is not affected by this and is printed on the terminal as usual, so build errors stop
               # the pipeline.
 
-              $GOPATH/bin/gocov convert coverage.txt > coverage.json
-              $GOPATH/bin/gocov-xml < coverage.json > coverage.xml
+              $GOPATH/bin/gocov convert codeCoverage.txt > codeCoverage.json
+              $GOPATH/bin/gocov-xml < codeCoverage.json > codeCoverage.xml
 
-              $GOPATH/bin/go-junit-report < test_results.txt > report.xml
+              $GOPATH/bin/go-junit-report < testResults.txt > testResults.xml
 
             displayName: 'Run tests'
             failOnStderr: 'true'
@@ -73,6 +73,12 @@ stages:
             displayName: 'Publish test results'
             inputs:
               testResultsFormat: 'JUnit'
-              testResultsFiles: 'report.xml'
+              testResultsFiles: 'testResults.xml'
               searchFolder: '$(modulePath)'
               failTaskOnFailedTests: 'true'
+          - task: PublishCodeCoverageResults@1
+            displayName: 'Publish code coverage'
+            inputs:
+              codeCoverageTool: 'Cobertura'
+              summaryFileLocation: 'codeCoverage.xml'
+              reportDirectory: '$(modulePath)'
