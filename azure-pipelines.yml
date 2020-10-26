@@ -45,11 +45,12 @@ stages:
               workingDirectory: '$(modulePath)'
           - script: |
               cd $(modulePath)
+
               # Get packages to view the test result in Azure Pipelines
-              go get github.com/jstemmer/go-junit-report  # Converts the go test text output to a junit xml report
+              go get github.com/jstemmer/go-junit-report  # Converts the go test result output into a junit xml report
 
               # Get packages to view the test coverage in Azure Pipelines
-              go get github.com/axw/gocov/gocov     # Coverage reporting tool for Go
+              go get github.com/axw/gocov/gocov     # Converts the go test coverage output into a json format
               go get github.com/AlekSi/gocov-xml    # Converts the gocov json output into a xml coverage report
 
               ### TODO ggf latest nehmen, nicht v1
@@ -57,29 +58,15 @@ stages:
 
               # Run tests
               go test -v -coverprofile=coverage.txt -covermode count ./... | tee test_results.txt # stdout and stderr to terminal and only stdout to file
-              # go test -v -coverprofile=coverage.txt -covermode count ./... 2>&1 | tee test_results.txt # stdout and stderr to terminal and to file --> perhaps identificaton of an error
-              # go test -v -coverprofile=coverage.txt -covermode count ./...
-
-              #rc=${PIPESTATUS[0]} # Get result code of `go test`
-              #echo $rc
 
               $GOPATH/bin/gocov convert coverage.txt > coverage.json
               $GOPATH/bin/gocov-xml < coverage.json > coverage.xml
 
-              #Check if `go test` had an error
-              #if [ $rc -ne 0 ]; then  # if rc is not equal to 0
-                # Let script fail by writing to stderr
-                #>&2 echo "Tests failed oh no"
-              #fi
-
-              #touch test_results.txt
-
               $GOPATH/bin/go-junit-report < test_results.txt > report.xml
-              
-              # go test -v -coverprofile=coverage.txt -covermode count ./... 2>&1 | go-junit-report > report.xml
-              # go test ./... -v -coverprofile=coverage.txt -covermode count 2>&1 | $GOPATH/bin/go-junit-report > report.xml Fabian
-            failOnStderr: 'true'
+
             displayName: 'Run tests'
+            failOnStderr: 'true'
+            continueOnError: 'false'
           - task: PublishTestResults@2
             displayName: 'Publish test results'
             inputs:

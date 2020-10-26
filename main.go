@@ -14,5 +14,5 @@ func main() {
 	powUc := powerUsecase.NewPowerUsecase(powRepoRest)
 	powerDeliveryRest.NewPowerDeliveryRest(e, powUc)
 
-	e.Start(":8080")
+	e.Strt(":8080")
 }
