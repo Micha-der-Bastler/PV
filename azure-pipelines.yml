@@ -61,7 +61,7 @@ stages:
               go test -v -coverprofile=coverage.txt -covermode count ./...
 
 #              rc=${PIPESTATUS[0]} # Get result code of `go test`
-              echo $rc
+#              echo $rc
               $GOPATH/bin/gocov convert coverage.txt > coverage.json
               $GOPATH/bin/gocov-xml < coverage.json > coverage.xml
               # Check if `go test` had an error
