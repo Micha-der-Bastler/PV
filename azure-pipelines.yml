@@ -84,5 +84,6 @@ stages:
             displayName: 'Publish code coverage'
             inputs:
               codeCoverageTool: 'Cobertura'
-              summaryFileLocation: './codeCoverage.xml'
-              reportDirectory: '$(modulePath)'
+              summaryFileLocation: '$(modulePath)/codeCoverage.xml'
+              #summaryFileLocation: $(MODULEPATH)/**/coverage.xml
+              #reportDirectory: '$(modulePath)'
