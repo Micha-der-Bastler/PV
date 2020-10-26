@@ -64,6 +64,8 @@ stages:
 
               $GOPATH/bin/gocov convert codeCoverage.txt > codeCoverage.json
               $GOPATH/bin/gocov-xml < codeCoverage.json > codeCoverage.xml
+              mkdir coverage
+              gocov-html < coverage.json > coverage/index.html
 
               $GOPATH/bin/go-junit-report < testResults.txt > testResults.xml
 
@@ -86,4 +88,4 @@ stages:
               codeCoverageTool: 'Cobertura'
               summaryFileLocation: '$(modulePath)/codeCoverage.xml'
               #summaryFileLocation: $(MODULEPATH)/**/coverage.xml
-              #reportDirectory: '$(modulePath)'
+              reportDirectory: '$(modulePath)/coverage'
