@@ -56,7 +56,11 @@ stages:
               go get gopkg.in/matm/v1/gocov-html    # Converts the gocov json output into a html coverage report
 
               # Run tests
-              go test -v -coverprofile=coverage.txt -covermode count ./... | tee test_results.txt
+              # go test -v -coverprofile=coverage.txt -covermode count ./... | tee test_results.txt # stdout and stderr to terminal and only stdout to file
+              # go test -v -coverprofile=coverage.txt -covermode count ./... 2>&1 | tee test_results.txt # stdout and stderr to terminal and to file --> perhaps identificaton of an error
+              go test -v -coverprofile=coverage.txt -covermode count ./...
+
+              touch test_results.txt
 
               $GOPATH/bin/go-junit-report < test_results.txt > report.xml
               
