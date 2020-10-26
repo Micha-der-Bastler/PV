@@ -53,26 +53,18 @@ stages:
               go get github.com/axw/gocov/gocov           # Converts the go test code coverage output into a json format
               go get github.com/AlekSi/gocov-xml          # Converts the gocov json output into a xml format
 
-              ### TODO ggf latest nehmen, nicht v1
-              go get gopkg.in/matm/v1/gocov-html          # Converts the gocov json output into a html coverage report
-
               # Run tests
               go test -v -coverprofile=codeCoverage.txt -covermode count ./... | tee testResults.txt   # tee prints
               # the piped STDOUT of "go test" to the terminal and additionally writes it to a file. STDERR from
               # "go test" is not affected by this and is printed on the terminal as usual, so build errors stop
               # the pipeline.
 
-              $GOPATH/bin/gocov convert codeCoverage.txt > codeCoverage.json
-              $GOPATH/bin/gocov-xml < codeCoverage.json > codeCoverage.xml
-              mkdir codeCoverage
-              $GOPATH/bin/gocov-html < codeCoverage.json > codeCoverage/index.html
-
+              # Converts the test results from go test into a junit xml format for Azure DevOps
               $GOPATH/bin/go-junit-report < testResults.txt > testResults.xml
 
-              echo log
-              pwd
-              ls -al
-
+              # Converts the code coverage from go test into a xml format for Azure DevOps
+              $GOPATH/bin/gocov convert codeCoverage.txt > codeCoverage.json
+              $GOPATH/bin/gocov-xml < codeCoverage.json > codeCoverage.xml
             displayName: 'Run tests'
             failOnStderr: 'true'
           - task: PublishTestResults@2
@@ -87,5 +79,3 @@ stages:
             inputs:
               codeCoverageTool: 'Cobertura'
               summaryFileLocation: '$(modulePath)/codeCoverage.xml'
-              #summaryFileLocation: $(MODULEPATH)/**/coverage.xml
-              reportDirectory: '$(modulePath)/codeCoverage'
