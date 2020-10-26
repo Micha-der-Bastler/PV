@@ -17,6 +17,6 @@ func Test_GetPower(t *testing.T) {
 	resPow, resErr := powUc.GetPower("")
 
 	// Assert
-	assert.Equal(t, domain.Power(101), resPow)
+	assert.Equal(t, domain.Power(100), resPow)
 	assert.Equal(t, nil, resErr)
 }
