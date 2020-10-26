@@ -60,6 +60,16 @@ stages:
               # go test -v -coverprofile=coverage.txt -covermode count ./... 2>&1 | tee test_results.txt # stdout and stderr to terminal and to file --> perhaps identificaton of an error
               go test -v -coverprofile=coverage.txt -covermode count ./...
 
+              rc=${PIPESTATUS[0]} # Get result code of `go test`
+
+              $GOPATH/bin/gocov convert coverage.txt > coverage.json
+              $GOPATH/bin/gocov-xml < coverage.json > coverage.xml
+              # Check if `go test` had an error
+              if [ $rc -ne 0 ]; then
+                # Let script fail by writing to stderr
+                >&2 echo "Tests failed oh no"
+              fi
+
               touch test_results.txt
 
               $GOPATH/bin/go-junit-report < test_results.txt > report.xml
