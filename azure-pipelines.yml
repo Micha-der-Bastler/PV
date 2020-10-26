@@ -16,11 +16,11 @@ pool:
   vmImage: 'ubuntu-18.04'
 
 stages:
-  - stage: Test
-    displayName: Run Tests
+  - stage: runTests
+    displayName: Run tests
     jobs:
-      - job: Test
-        displayName: Run Tests
+      - job: runTests
+        displayName: Run tests
         steps:
           - task: GoTool@0
             displayName: 'Install Go and set GOPATH'
@@ -28,97 +28,41 @@ stages:
               version: '1.15.3'
               goPath: '$(HOME)/go'
           - script: |
-              echo projectName
-              echo $(projectName)
-              echo projectName ohne Klammer
-              echo $projectName
-              echo System.DefaultWorkingDirectory
-              echo $(System.DefaultWorkingDirectory)
-              echo go version:
-              go version
-              echo print GOPATH:
-              echo $GOPATH
-              echo print GOROOT:
-              echo $GOROOT
-              echo print HOME:
-              echo $HOME
-              echo print Build.Repository.Name
-              echo $(Build.Repository.Name)
-              echo modulePath
-              echo $(modulePath)
-              echo pwd
-              pwd
-              echo ls -al
-              ls -al
-            displayName: print info
-#          - task: CopyFiles@2
-#            displayName: 'Copy git repo into GOPATH'
-#            inputs:
-#              SourceFolder: '$(System.DefaultWorkingDirectory)'  # "System.DefaultWorkingDirectory" is the local path
-#              # on the agent where the git repository gets checked out (e.g. "/home/vsts/work/1/s").
-#              Contents: '**'  # Copy all files of the specified source folder and its sub-folders
-#              TargetFolder: '$(modulePath)'
-          - script: |
-              echo pwd
-              pwd
-              echo ls -al
-              ls -al
-              mkdir -p $(modulePath)
-              find ./ -mindepth 1 -maxdepth 1 -exec mv {} $(modulePath) \;
-              echo pwd
-              pwd
-              echo ls -al
-              ls -al
-              cd $(modulePath)
-              echo pwd
-              pwd
-              echo ls -al
-              ls -al
-            displayName: move instead copy
+              # $(System.DefaultWorkingDirectory) is the local path on the agent where the git repository gets
+              # checked out and a new step starts in (e.g. "/home/vsts/work/1/s")
+              mkdir -p $(modulePath)    # -p creates also parent directories if necessary
+              find ./ -mindepth 1 -maxdepth 1 -exec mv {} $(modulePath) \;    # Find all files, folders and hidden
+              # elements only inside the current hierarchy level and move them to $(modulePath)
+            displayName: Move repo into GOPATH
           - task: Go@0
             displayName: 'Get required packages'
             inputs:
               command: 'get'
-              arguments: '-d -t -v ./...'
+              arguments: '-d -t -v ./...'   # -t download also packages which are required for testing
               workingDirectory: '$(modulePath)'
           - script: |
               cd $(modulePath)
+              # Get packages to view the test result in Azure Pipelines
+              go get github.com/jstemmer/go-junit-report  # Converts the go test text output to a junit xml report
 
-              ### TODO go test wird in altem Verzeichnis /home/vsts/work/1/s mit altem Code ausgeführt. Code verschieben anstatt kopieren? Lieber GOPATH nicht im $HOME/go???
-
-
-              # Packages to view the test result in Azure Pipelines
-              go get github.com/jstemmer/go-junit-report  # Converts the go test output to a junit xml report
-
-              # Packages to view the test coverage in Azure Pipelines
-              go get github.com/axw/gocov/gocov  # Coverage reporting tool for Go
-              go get github.com/AlekSi/gocov-xml  # Converts the gocov json output into a XML coverage report
+              # Get packages to view the test coverage in Azure Pipelines
+              go get github.com/axw/gocov/gocov     # Coverage reporting tool for Go
+              go get github.com/AlekSi/gocov-xml    # Converts the gocov json output into a xml coverage report
 
               ### TODO ggf latest nehmen, nicht v1
+              go get gopkg.in/matm/v1/gocov-html    # Converts the gocov json output into a html coverage report
 
-
-              go get gopkg.in/matm/v1/gocov-html  # Converts the gocov json output into a HTML coverage report
-
-              cd ..
-              cd ..
-              ls -al
-              cd $(modulePath)
-
-              pwd
+              # Run tests
               go test -v -coverprofile=coverage.txt -covermode count ./... > test_results.txt
-              pwd
-              $GOPATH/bin/go-junit-report < test_results.txt > report.xml
-              ls -al
 
+              $GOPATH/bin/go-junit-report < test_results.txt > report.xml
+              
               # go test -v -coverprofile=coverage.txt -covermode count ./... 2>&1 | go-junit-report > report.xml
               # go test ./... -v -coverprofile=coverage.txt -covermode count 2>&1 | $GOPATH/bin/go-junit-report > report.xml Fabian
-            displayName: 'Run Tests'
-          - script: |
-              cd $(modulePath)
-              ls -al
+            displayName: 'Run tests'
           - task: PublishTestResults@2
+            displayName: 'Publish test results'
             inputs:
               testResultsFormat: 'JUnit'
-              testResultsFiles: 'report.xml' # ggf ein ./ voranstellen
+              testResultsFiles: 'report.xml'
               searchFolder: '$(modulePath)'
-
