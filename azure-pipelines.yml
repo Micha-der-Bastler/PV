@@ -50,14 +50,17 @@ stages:
               go get github.com/jstemmer/go-junit-report  # Converts the go test result output into a junit xml report
 
               # Get packages to view the test coverage in Azure Pipelines
-              go get github.com/axw/gocov/gocov     # Converts the go test coverage output into a json format
-              go get github.com/AlekSi/gocov-xml    # Converts the gocov json output into a xml coverage report
+              go get github.com/axw/gocov/gocov           # Converts the go test coverage output into a json format
+              go get github.com/AlekSi/gocov-xml          # Converts the gocov json output into a xml coverage report
 
               ### TODO ggf latest nehmen, nicht v1
-              go get gopkg.in/matm/v1/gocov-html    # Converts the gocov json output into a html coverage report
+              go get gopkg.in/matm/v1/gocov-html          # Converts the gocov json output into a html coverage report
 
               # Run tests
-              go test -v -coverprofile=coverage.txt -covermode count ./... | tee test_results.txt # stdout and stderr to terminal and only stdout to file
+              go test -v -coverprofile=coverage.txt -covermode count ./... | tee test_results.txt   # tee prints
+              # the piped STDOUT of "go test" to the terminal and additionally writes it to a file. STDERR from
+              # "go test" is not affected by this and is printed on the terminal as usual, so build errors stop
+              # the pipeline.
 
               $GOPATH/bin/gocov convert coverage.txt > coverage.json
               $GOPATH/bin/gocov-xml < coverage.json > coverage.xml
@@ -72,3 +75,4 @@ stages:
               testResultsFormat: 'JUnit'
               testResultsFiles: 'report.xml'
               searchFolder: '$(modulePath)'
+              failTaskOnFailedTests: 'true'
