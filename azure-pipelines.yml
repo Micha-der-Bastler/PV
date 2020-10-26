@@ -64,7 +64,7 @@ stages:
 
               $GOPATH/bin/gocov convert codeCoverage.txt > codeCoverage.json
               $GOPATH/bin/gocov-xml < codeCoverage.json > codeCoverage.xml
-              mkdir coverage
+              mkdir codeCoverage
               $GOPATH/bin/gocov-html < codeCoverage.json > codeCoverage/index.html
 
               $GOPATH/bin/go-junit-report < testResults.txt > testResults.xml
