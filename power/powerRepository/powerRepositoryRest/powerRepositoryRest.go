@@ -8,7 +8,7 @@ import (
 	"net/http"
 )
 
-// powerRepositoryRest represents the  REST repository layer of the power domain.
+// powerRepositoryRest represents the REST repository layer of the power domain.
 type powerRepositoryRest struct {
 }
 
@@ -32,7 +32,8 @@ func (r *powerRepositoryRest) GetPower(baseUrl string) (domain.Power, error) {
 	defer resp.Body.Close()
 
 	// Parse JSON response
-	err = json.NewDecoder(resp.Body).Decode(&status)
+	err = json.NewDecoder(resp.Body).Decode(&status) // Decoder buffers the byte stream as []byte internally
+	// before unmarshalling it into a Go value (= parsing)
 	if err != nil {
 		logrus.Error("Error reading response body from Shelly. ", err)
 		return 0, err

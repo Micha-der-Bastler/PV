@@ -6,7 +6,7 @@ import (
 	"net/http"
 )
 
-// powerDeliveryRest represents the  REST delivery layer of the power domain.
+// powerDeliveryRest represents the REST delivery layer of the power domain.
 type powerDeliveryRest struct {
 	powUc domain.PowerUsecase
 }
