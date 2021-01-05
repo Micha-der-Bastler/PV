@@ -10,14 +10,14 @@ import (
 )
 
 func Test_GetPower_PosValues(t *testing.T) {
-	// Arrange 1/2
+	/*** Arrange 1/2 ***/
 	// Start a local HTTP server
 	server := httptest.NewServer(http.HandlerFunc(func(resWri http.ResponseWriter, req *http.Request) {
-		// Assert 1/2
+		/*** Assert 1/2 ***/
 		// Test request parameters
 		assert.Equal(t, "/status", req.URL.Path)
 		assert.Equal(t, "GET", req.Method)
-		// Arrange 2/2
+		/*** Arrange 2/2 ***/
 		// Send response
 		resWri.Write([]byte(`{"wifi_sta":{"connected":true,"ssid":"SpaetzleMitSauceToGo (5 GHz)","ip":"192.168.1.87",` +
 			`"rssi":-34},"cloud":{"enabled":false,"connected":false},"mqtt":{"connected":false},"time":"14:36",` +
@@ -36,23 +36,23 @@ func Test_GetPower_PosValues(t *testing.T) {
 	// Create test object
 	pRR := powerRepositoryRest.NewPowerRepositoryRest()
 
-	// Act
+	/*** Act ***/
 	res, err := pRR.GetPower(server.URL)
 
-	// Assert 2/2
+	/*** Assert 2/2 ***/
 	assert.Equal(t, domain.Power(4.55), res)
 	assert.Equal(t, nil, err)
 }
 
 func Test_GetPower_NegValues(t *testing.T) {
-	// Arrange 1/2
+	/*** Arrange 2/2 ***/
 	// Start a local HTTP server
 	server := httptest.NewServer(http.HandlerFunc(func(resWri http.ResponseWriter, req *http.Request) {
-		// Assert 1/2
+		/*** Assert 1/2 ***/
 		// Test request parameters
 		assert.Equal(t, "/status", req.URL.Path)
 		assert.Equal(t, "GET", req.Method)
-		// Arrange 2/2
+		/*** Arrange 2/2 ***/
 		// Send response
 		resWri.Write([]byte(`{"wifi_sta":{"connected":true,"ssid":"SpaetzleMitSauceToGo (5 GHz)","ip":"192.168.1.87",` +
 			`"rssi":-34},"cloud":{"enabled":false,"connected":false},"mqtt":{"connected":false},"time":"14:36",` +
@@ -71,10 +71,10 @@ func Test_GetPower_NegValues(t *testing.T) {
 	// Create test object
 	powRepoRest := powerRepositoryRest.NewPowerRepositoryRest()
 
-	// Act
+	/*** Act ***/
 	res, err := powRepoRest.GetPower(server.URL)
 
-	// Assert 2/2
+	/*** Assert 2/2 ***/
 	assert.Equal(t, domain.Power(-4.55), res)
 	assert.Equal(t, nil, err)
 }

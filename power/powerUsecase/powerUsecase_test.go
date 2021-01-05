@@ -9,15 +9,15 @@ import (
 )
 
 func Test_GetPower(t *testing.T) {
-	// Arrange
+	/*** Arrange ***/
 	powRepoMock := new(mocks.PowerRepositoryRest)
 	powRepoMock.On("GetPower", "http://shelly1pm-BA0F5F").Return(domain.Power(100), nil)
 	powUc := powerUsecase.NewPowerUsecase(powRepoMock)
 
-	// Act
+	/*** Act ***/
 	resPow, resErr := powUc.GetPower("http://shelly1pm-BA0F5F")
 
-	// Assert
+	/*** Assert ***/
 	assert.Equal(t, domain.Power(100), resPow)
 	assert.Equal(t, nil, resErr)
 	// Verify that powUc.GetPower called the mocked powRepoMock.GetPower method as expected
