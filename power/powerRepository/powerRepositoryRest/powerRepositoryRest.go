@@ -2,6 +2,7 @@ package powerRepositoryRest
 
 import (
 	"encoding/json"
+	"fmt"
 	"github.com/michaderbastler/pv/domain"
 	"github.com/michaderbastler/pv/models/shelly"
 	"github.com/sirupsen/logrus"
@@ -26,7 +27,11 @@ func (r *powerRepositoryRest) GetPower(baseUrl string) (domain.Power, error) {
 	// Send HTTP GET request
 	resp, err := http.Get(baseUrl + "/status")
 	if err != nil {
-		logrus.Error("Error getting response from Shelly. ", err)
+		// Add additional information to the error
+		// 504 Gateway Timeout --> Server acts as gateway and doesn't get the response from another server in time
+		err = fmt.Errorf("%v %v: error getting response from shelly: %w",
+			http.StatusGatewayTimeout, http.StatusText(http.StatusGatewayTimeout), err)
+		logrus.Error(err)
 		return 0, err
 	}
 	defer resp.Body.Close()
@@ -35,7 +40,11 @@ func (r *powerRepositoryRest) GetPower(baseUrl string) (domain.Power, error) {
 	err = json.NewDecoder(resp.Body).Decode(&status) // Decoder buffers the byte stream as []byte internally
 	// before unmarshalling it into a Go value (= parsing)
 	if err != nil {
-		logrus.Error("Error reading response body from Shelly. ", err)
+		// Add additional information to the error
+		// 502 Bad Gateway --> Server acts as gateway and received a invalid response from another server
+		err = fmt.Errorf("%v %v: error parsing response body from shelly: %w",
+			http.StatusBadGateway, http.StatusText(http.StatusBadGateway), err)
+		logrus.Error(err)
 		return 0, err
 	}
 	return status.Meters[0].Power, nil
