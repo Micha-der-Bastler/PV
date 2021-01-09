@@ -6,20 +6,23 @@ trigger:
     exclude:
       - README.md
       - .gitignore
+      - swagger.yaml
+      - do.sh
 
 variables:
-  modulePath: '$(GOPATH)/src/github.com/$(Build.Repository.Name)' # "Build.Repository.Name" is the name of the
-  # triggering repository (e.g. "michaderbastler/pv").
+  - name: modulePath
+    value: '$(GOPATH)/src/github.com/$(Build.Repository.Name)' # "Build.Repository.Name" is the name of the
+    # triggering repository (e.g. "michaderbastler/pv").
 
 pool:
   vmImage: 'ubuntu-18.04'
 
 stages:
-  - stage: runTests
-    displayName: Run tests
+  - stage: 'runTests'
+    displayName: 'Run tests'
     jobs:
-      - job: runTests
-        displayName: Run tests
+      - job: 'runTests'
+        displayName: 'Run tests'
         steps:
           - task: GoTool@0
             displayName: 'Install Go and set GOPATH'
@@ -36,28 +39,28 @@ stages:
               echo Repo is located in: $(pwd)
               echo Files in repo:
               ls -al
-            displayName: Move repo inside GOPATH
-          - task: Go@0
-            displayName: 'Get required packages'
-            inputs:
-              command: 'get'
-              arguments: '-d -t -v ./...'   # -t download also packages which are required for testing
-              workingDirectory: '$(modulePath)'
+            displayName: 'Move repo inside GOPATH'
           - script: |
-              cd $(modulePath)
-
               # Get packages to view the test result in Azure Pipelines
-              go get github.com/jstemmer/go-junit-report  # Converts the go test result output into a junit xml format
+              go get github.com/jstemmer/go-junit-report # Converts the go test result output into a junit xml format
 
               # Get packages to view the code coverage in Azure Pipelines
-              go get github.com/axw/gocov/gocov           # Converts the go test code coverage output into a json format
-              go get github.com/AlekSi/gocov-xml          # Converts the gocov json output into a xml format
+              go get github.com/axw/gocov/gocov          # Converts the go test code coverage output into a json format
+              go get github.com/AlekSi/gocov-xml         # Converts the gocov json output into a xml format
+
+              cd $(modulePath)  # go get inside module path prints on STDERR since we are using Go Moduels,
+              # that's why we're only now switching into module path
 
               # Run tests
-              go test -v -coverprofile=codeCoverage.txt -covermode count ./... | tee testResults.txt   # tee prints
-              # the piped STDOUT of "go test" to the terminal and additionally writes it to a file. STDERR from
-              # "go test" is not affected by this and is printed on the terminal as usual, so build errors stop
-              # the pipeline.
+              go test -v -coverprofile=codeCoverage.txt -covermode count ./... 2>&1 | tee testResults.txt
+              # Because "go test" prints infos about downloading modules on STDERR, we have to redircet them to STDOUT.
+              # Afterwards "tee" prints the piped STDOUT to the terminal and additionally writes it to a file.
+
+              # Check if "go test" had an error
+              exitCode=${PIPESTATUS[0]}     # Get exit code of "go test"
+              if [ $exitCode -ne 0 ]; then  # if exitCode is not equal to 0
+                echo "\"go test\" had an error (exit code is $exitCode)" >&2  # Let script fail by writing to STDERR
+              fi
 
               # Converts the test results from go test into a junit xml format for Azure DevOps
               $GOPATH/bin/go-junit-report < testResults.txt > testResults.xml
@@ -68,13 +71,15 @@ stages:
             displayName: 'Run tests'
             failOnStderr: 'true'
           - task: PublishTestResults@2
+            condition: always()   # Publish test results also if a test in step "Run tests" failed
             displayName: 'Publish test results'
             inputs:
               testResultsFormat: 'JUnit'
               testResultsFiles: 'testResults.xml'
               searchFolder: '$(modulePath)'
-              failTaskOnFailedTests: 'true'
+              failTaskOnFailedTests: true
           - task: PublishCodeCoverageResults@1
+            condition: always()   # Publish code coverage also if a test in step "Run tests" failed
             displayName: 'Publish code coverage'
             inputs:
               codeCoverageTool: 'Cobertura'
